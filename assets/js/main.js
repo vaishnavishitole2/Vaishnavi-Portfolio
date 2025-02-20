@@ -3,10 +3,31 @@ navToggle = document.getElementById("nav-toggle"),
 navItem = document.querySelectorAll(".nav__item"),
 header = document.getElementById("header");
 
+// Theme toggle functionality
+const themeToggle = document.getElementById('theme-toggle');
+
+// Check for saved theme preference
+let isDarkMode = localStorage.getItem('theme') === 'light' ? false : true;
+
+// Apply saved theme on load
+if (!isDarkMode) {
+  document.body.classList.add('light-mode');
+  themeToggle.innerHTML = '<i class="ri-moon-line"></i>';
+}
+
+themeToggle.addEventListener('click', () => {
+  isDarkMode = !isDarkMode;
+  document.body.classList.toggle('light-mode');
+  themeToggle.innerHTML = isDarkMode ? '<i class="ri-sun-line"></i>' : '<i class="ri-moon-line"></i>';
+  
+  // Save theme preference
+  localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+});
+
 // open and close menu
 navToggle.addEventListener("click", () => {
-navMenu.classList.toggle("nav__menu--open");
-changeIcon();
+  navMenu.classList.toggle("nav__menu--open");
+  changeIcon();
 });
 
 const scrollToHireMe = () => {
@@ -16,93 +37,67 @@ const scrollToHireMe = () => {
 
 // close the menu when the user clicks the nav links
 navItem.forEach((item) => {
-item.addEventListener("click", () => {
-  if (navMenu.classList.contains("nav__menu--open")) {
-    navMenu.classList.remove("nav__menu--open");
-  }
-  changeIcon();
-});
+  item.addEventListener("click", () => {
+    if (navMenu.classList.contains("nav__menu--open")) {
+      navMenu.classList.remove("nav__menu--open");
+    }
+    changeIcon();
+  });
 });
 
 // Change nav toggle icon
 function changeIcon() {
-if (navMenu.classList.contains("nav__menu--open")) {
-  navToggle.classList.replace("ri-menu-3-line", "ri-close-line");
-} else {
-  navToggle.classList.replace("ri-close-line", "ri-menu-3-line");
+  if (navMenu.classList.contains("nav__menu--open")) {
+    navToggle.classList.replace("ri-menu-3-line", "ri-close-line");
+  } else {
+    navToggle.classList.replace("ri-close-line", "ri-menu-3-line");
+  }
 }
-}
-
-// Downloading Resume
-// document.getElementsByClassName("btn btn--primary").addEventListener("click", function() {
-//   window.location.href = "../../assets/Calvin Mwangi.pdf"
-// })
-
-
-// Testimonial Slide
-
-const testimonialSlide = new Swiper(".testimonial__wrapper", {
-loop: true,
-spaceBetween: 30,
-centeredSlides: true,
-effect: "coverflow",
-grabCursor: true,
-slidesPerView: 1,
-coverflowEffect: {
-  rotate: 50,
-  stretch: 0,
-  depth: 100,
-  modifier: 1,
-  slideShadows: true,
-},
-pagination: {
-  el: ".swiper-pagination",
-  clickable: true,
-},
-
-breakpoints: {
-  520: {
-    slidesPerView: "auto",
-  },
-},
-});
 
 // header scroll animation
 window.addEventListener("scroll", () => {
-if (window.scrollY > 40) {
-  header.classList.add("header--scroll");
-} else {
-  header.classList.remove("header--scroll");
-}
+  if (window.scrollY > 40) {
+    header.classList.add("header--scroll");
+  } else {
+    header.classList.remove("header--scroll");
+  }
 });
 
-// ScrollReveal animations
+// Enhanced ScrollReveal animations
 const sr = ScrollReveal({
-duration: 2000,
-distance: "100px",
-delay: 400,
-reset: false,
+  duration: 1500,
+  distance: '60px',
+  delay: 400,
+  reset: false,
+  mobile: true,
+  easing: 'cubic-bezier(0.5, 0, 0, 1)'
 });
 
-sr.reveal(".hero__content, .about__content");
-sr.reveal(".hero__img", { origin: "top" });
-
-sr.reveal(
-".hero__info-wrapper, .skills__title, .skills__content, .qualification__name, .qualification__item, .service__card, .project__content, .testimonial__wrapper, .footer__content",
-{
-  delay: 500,
-  interval: 100,
-}
-);
-
-sr.reveal(".qualification__footer-text, .contact__content", {
-origin: "left",
+// Apply enhanced animations with smoother transitions
+sr.reveal('.hero__content', { origin: 'top' });
+sr.reveal('.hero__img', { origin: 'bottom', delay: 600 });
+sr.reveal('.hero__info-wrapper', { origin: 'left', interval: 100 });
+sr.reveal('.skills__content', { origin: 'right', interval: 100 });
+sr.reveal('.qualification__content', { origin: 'left' });
+sr.reveal('.service__card', { 
+  origin: 'bottom',
+  interval: 200,
+  beforeReveal: (el) => {
+    el.style.transform = 'scale(0.8)';
+  },
+  afterReveal: (el) => {
+    el.style.transform = 'scale(1)';
+  }
+});
+sr.reveal('.project__content', { 
+  origin: 'bottom',
+  interval: 300,
+  distance: '40px'
 });
 
-sr.reveal(".qualification__footer .btn, .contact__btn", { origin: "right" });
-
+// Update copyright year
 document.addEventListener('DOMContentLoaded', () => {
-const yearSpan = document.querySelector('.footer__copyright');
-const currentYear = new Date().getFullYear();
-yearSpan.innerHTML = yearSpan.innerHTML.replace('{currentYear}', currentYear);
+  const yearSpan = document.querySelector('.footer__copyright');
+  const currentYear = new Date().getFullYear();
+  yearSpan.innerHTML = yearSpan.innerHTML.replace('{currentYear}', currentYear);
 });
